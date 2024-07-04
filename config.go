@@ -17,12 +17,12 @@ type Config struct {
 func defaultConfig() Config {
 	return Config{
 		Database:            "db.sqlite",
-		AlbionEventUrl:      "https://gameinfo.albiononline.com/api/gameinfo/events/",
-		AlbionOnlineDataUrl: "https://old.west.albion-online-data.com/api/v2/stats/Prices/",
+		AlbionEventUrl:      "https://gameinfo.albiononline.com/api/gameinfo/events", // ?limit={limit}&offset={offset}
+		AlbionOnlineDataUrl: "https://old.west.albion-online-data.com/api/v2/stats/Prices",
 	}
 }
 
-func loadConfig(path string) (Config, error) {
+func loadConfigFile(path string) (Config, error) {
 	var config Config
 	if _, err := toml.DecodeFile(path, &config); err != nil {
 		return Config{}, err
@@ -30,7 +30,7 @@ func loadConfig(path string) (Config, error) {
 	return config, nil
 }
 
-func saveConfig(path string, config Config) error {
+func saveConfigFile(path string, config Config) error {
 	file, err := os.Create(path)
 	if err != nil {
 		return err
@@ -53,14 +53,14 @@ func getConfig() (Config, error) {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		fmt.Println("Config file not found, generating default config...")
 		config = defaultConfig()
-		if err := saveConfig(configPath, config); err != nil {
+		if err := saveConfigFile(configPath, config); err != nil {
 			fmt.Println("Error saving default config:", err)
 			return config, err
 		}
 	} else {
 		fmt.Println("Loading config file...")
 		var err error
-		config, err = loadConfig(configPath)
+		config, err = loadConfigFile(configPath)
 		if err != nil {
 			fmt.Println("Error loading config file:", err)
 			return config, err
