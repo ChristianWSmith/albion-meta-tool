@@ -4,23 +4,32 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
 
 type Config struct {
-	Database       string   `toml:"database"`
-	KillEventUrl   string   `toml:"albion_event_url"`
-	PriceUrl       string   `toml:"albion_online_data_url"`
-	PriceLocations []string `toml:"price_locations"`
+	Database            string        `toml:"database"`
+	KillEventUrl        string        `toml:"albion_event_url"`
+	PriceUrl            string        `toml:"albion_online_data_url"`
+	PriceLocations      []string      `toml:"price_locations"`
+	PriceStaleThreshold time.Duration `toml:"price_stale_threshold"`
+	LogFile             string        `toml:"log_file"`
+	LogLevel            string        `toml:"log_level"`
+	Port                int           `toml:"port"`
 }
 
 func defaultConfig() Config {
 	return Config{
-		Database:       "db.sqlite",
-		KillEventUrl:   "https://gameinfo.albiononline.com/api/gameinfo/events", // ?limit={limit}&offset={offset}
-		PriceUrl:       "https://old.west.albion-online-data.com/api/v2/stats/Prices",
-		PriceLocations: []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
+		Database:            "amt.sqlite",
+		KillEventUrl:        "https://gameinfo.albiononline.com/api/gameinfo/events",       // ?limit={limit}&offset={offset}
+		PriceUrl:            "https://old.west.albion-online-data.com/api/v2/stats/Prices", // {itemList}.json
+		PriceLocations:      []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
+		PriceStaleThreshold: time.Duration(7*24) * time.Hour,
+		LogFile:             "amt.log",
+		LogLevel:            "info",
+		Port:                8080,
 	}
 }
 
