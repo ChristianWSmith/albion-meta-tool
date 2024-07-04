@@ -7,7 +7,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func init_database(config Config) error {
+func initDatabase(config Config) error {
 	// Connect to the SQLite database
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {
