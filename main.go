@@ -32,4 +32,6 @@ func main() {
 
 	logInfo(fmt.Sprintf("Config: %v", config), nil)
 	// Your application logic here
+
+	eventMonitor()
 }
