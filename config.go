@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -62,18 +62,18 @@ func getConfig() (Config, error) {
 
 	var config Config
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		fmt.Println("Config file not found, generating default config...")
+		log.Println("Config file not found, generating default config...")
 		config = defaultConfig()
 		if err := saveConfigFile(configPath, config); err != nil {
-			fmt.Println("Error saving default config:", err)
+			log.Fatalln("Error saving default config:", err)
 			return config, err
 		}
 	} else {
-		fmt.Println("Loading config file...")
+		log.Println("Loading config file...")
 		var err error
 		config, err = loadConfigFile(configPath)
 		if err != nil {
-			fmt.Println("Error loading config file:", err)
+			log.Fatalln("Error loading config file:", err)
 			return config, err
 		}
 	}

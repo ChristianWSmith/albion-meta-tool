@@ -25,3 +25,4 @@ go.work.sum
 albion-meta-tool
 amt.toml
 amt.sqlite
+amt.log

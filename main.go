@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 )
@@ -30,6 +29,6 @@ func main() {
 		crash("Failed to initialize database", err)
 	}
 
-	fmt.Printf("Config: %+v\n", config)
+	log.Println("Config: ", config)
 	// Your application logic here
 }
