@@ -9,16 +9,18 @@ import (
 )
 
 type Config struct {
-	Database            string `toml:"database"`
-	AlbionEventUrl      string `toml:"albion_event_url"`
-	AlbionOnlineDataUrl string `toml:"albion_online_data_url"`
+	Database       string   `toml:"database"`
+	KillEventUrl   string   `toml:"albion_event_url"`
+	PriceUrl       string   `toml:"albion_online_data_url"`
+	PriceLocations []string `toml:"price_locations"`
 }
 
 func defaultConfig() Config {
 	return Config{
-		Database:            "db.sqlite",
-		AlbionEventUrl:      "https://gameinfo.albiononline.com/api/gameinfo/events", // ?limit={limit}&offset={offset}
-		AlbionOnlineDataUrl: "https://old.west.albion-online-data.com/api/v2/stats/Prices",
+		Database:       "db.sqlite",
+		KillEventUrl:   "https://gameinfo.albiononline.com/api/gameinfo/events", // ?limit={limit}&offset={offset}
+		PriceUrl:       "https://old.west.albion-online-data.com/api/v2/stats/Prices",
+		PriceLocations: []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
 	}
 }
 
