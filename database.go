@@ -2,16 +2,15 @@ package main
 
 import (
 	"database/sql"
-	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func initDatabase(config Config) error {
+func initDatabase() error {
 	// Connect to the SQLite database
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {
-		log.Fatal(err)
+		logError("Failed to open database", err)
 		return err
 	}
 	defer db.Close()
@@ -56,7 +55,7 @@ func initDatabase(config Config) error {
 		);
 	`
 	if _, err := db.Exec(createTables); err != nil {
-		log.Fatal(err)
+		logError("", err)
 		return err
 	}
 	return nil

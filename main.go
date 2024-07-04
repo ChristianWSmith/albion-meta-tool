@@ -1,34 +1,35 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 )
 
+var config Config = defaultConfig()
+
 func crash(message string, err error) {
-	log.Fatal(message+":", err)
+	logError(message, err)
 	os.Exit(1)
 }
 
 func main() {
+	var err error
 
-	var config, err = getConfig()
+	config, err = getConfig()
 	if err != nil {
 		crash("Failed while getting config", err)
 	}
 
-	logFile, err := os.OpenFile(config.LogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	err = initLogging()
 	if err != nil {
-		crash("Failed to open log file", err)
+		crash("Failed to initialize logging", err)
 	}
 
-	log.SetOutput(logFile)
-
-	err = initDatabase(config)
+	err = initDatabase()
 	if err != nil {
 		crash("Failed to initialize database", err)
 	}
 
-	log.Println("Config: ", config)
+	logInfo(fmt.Sprintf("Config: %v", config), nil)
 	// Your application logic here
 }

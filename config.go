@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"log"
+	"fmt"
 	"os"
+	"slices"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -16,7 +17,7 @@ type Config struct {
 	PriceLocations      []string      `toml:"price_locations"`
 	PriceStaleThreshold time.Duration `toml:"price_stale_threshold"`
 	LogFile             string        `toml:"log_file"`
-	LogLevel            string        `toml:"log_level"`
+	LogLevel            LogLevel      `toml:"log_level"`
 	Port                int           `toml:"port"`
 }
 
@@ -28,7 +29,7 @@ func defaultConfig() Config {
 		PriceLocations:      []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
 		PriceStaleThreshold: time.Duration(7*24) * time.Hour,
 		LogFile:             "amt.log",
-		LogLevel:            "info",
+		LogLevel:            LogLevelInfo,
 		Port:                8080,
 	}
 }
@@ -62,20 +63,23 @@ func getConfig() (Config, error) {
 
 	var config Config
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		log.Println("Config file not found, generating default config...")
+		logInfo("Config file not found, generating default config", nil)
 		config = defaultConfig()
 		if err := saveConfigFile(configPath, config); err != nil {
-			log.Fatalln("Error saving default config:", err)
+			logError("Failed saving default config", err)
 			return config, err
 		}
 	} else {
-		log.Println("Loading config file...")
+		logInfo("Loading config file", nil)
 		var err error
 		config, err = loadConfigFile(configPath)
 		if err != nil {
-			log.Fatalln("Error loading config file:", err)
+			logError("Failed loading config file", err)
 			return config, err
 		}
+	}
+	if !slices.Contains(LOG_LEVELS, config.LogLevel) {
+		return config, fmt.Errorf("invalid log level: %s", config.LogLevel)
 	}
 	return config, nil
 }
