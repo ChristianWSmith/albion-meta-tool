@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -41,8 +40,6 @@ type Event struct {
 	NumberOfParticipants uint8
 	Timestamp            time.Time
 }
-
-var itemStringRegex *regexp.Regexp = regexp.MustCompile(`^T(?P<Tier>\d+)_(?P<Name>[A-Z1-3_]+)(?:@(?P<Enchantment>\d+))?$`)
 
 func getKillEventUrls() []string {
 	var urls []string
@@ -225,7 +222,6 @@ func getEvents(url string, eventChan chan<- Event, errorChan chan<- error, wg *s
 		eventChan <- event
 		return true // keep iterating
 	})
-	fmt.Println(url)
 }
 
 func getAllEvents() ([]Event, error) {
@@ -256,7 +252,6 @@ func getAllEvents() ([]Event, error) {
 	// Collect and print results from the channel
 	for event := range eventChan {
 		events = append(events, event)
-		log.Debug(event)
 	}
 	for err := range errorChan {
 		errs = append(errs, err)
@@ -287,6 +282,8 @@ func eventMonitor() {
 			log.Error("Failed to insert events to database: ", err)
 		}
 
+		maxTime = minTime
+		minTime = time.Now()
 		for _, event := range events {
 			if event.Timestamp.Compare(minTime) == -1 {
 				minTime = event.Timestamp
@@ -296,8 +293,8 @@ func eventMonitor() {
 			}
 		}
 		duration := maxTime.Sub(minTime)
-		sleepTime := time.Duration(duration.Seconds()/2) * time.Second
-		log.Info("sleeping for ", sleepTime.Seconds(), " seconds")
+		sleepTime := duration / 2
+		log.Info("Event monitor sleeping for ", sleepTime.Seconds(), " seconds")
 		time.Sleep(sleepTime)
 	}
 }
