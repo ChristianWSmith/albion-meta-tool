@@ -48,7 +48,7 @@ func getItemPrices(items []Item) (map[Item]float64, error) {
 	err = nil
 	for _, item := range items {
 		if itemPrices[item] == 0.0 {
-			log.Error("Failed to query or call API for item price: ", item)
+			log.Debug("Failed to query or call API for item price: ", item)
 			err = fmt.Errorf("failed to query or call API for at least one item")
 		}
 	}
@@ -220,6 +220,6 @@ func cachePricesFromEvents(events []Event) {
 
 	_, err := getItemPrices(items)
 	if err != nil {
-		log.Error("Failed to get prices for items: ", items)
+		log.Debug("Failed to get prices for items: ", items)
 	}
 }
