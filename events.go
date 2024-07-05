@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/tidwall/gjson"
@@ -188,12 +189,13 @@ func resultToEvent(result gjson.Result) (Event, error) {
 	return event, nil
 }
 
-func getEvents(url string) ([]Event, error) {
+func getEvents(url string, eventChan chan<- Event, errorChan chan<- error, wg *sync.WaitGroup) {
+	defer wg.Done()
 	response, err := http.Get(url)
-	var events []Event
 	if err != nil {
 		log.Warn("The HTTP request failed with error ", err)
-		return events, err
+		errorChan <- err
+		return
 	}
 	defer response.Body.Close()
 
@@ -201,7 +203,8 @@ func getEvents(url string) ([]Event, error) {
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Error("Failed to read the response body: ", err)
-		return events, err
+		errorChan <- err
+		return
 	}
 
 	// Use Gjson to parse and query the JSON response
@@ -209,7 +212,8 @@ func getEvents(url string) ([]Event, error) {
 
 	if !gjson.Valid(json) {
 		log.Error("Invalid json resonse from url: ", url)
-		return events, fmt.Errorf("invalid json resonse from url: %s", url)
+		errorChan <- fmt.Errorf("invalid json resonse from url: %s", url)
+		return
 	}
 	// Example: Iterate over all events and print the Killer's Name
 	gjson.Parse(json).ForEach(func(_, result gjson.Result) bool {
@@ -218,19 +222,40 @@ func getEvents(url string) ([]Event, error) {
 			log.Error("Failed to convert result to event", result)
 		}
 		log.Debug("Parsed event: ", event)
-		events = append(events, event)
+		eventChan <- event
 		return true // keep iterating
 	})
-
-	return events, nil
+	fmt.Println(url)
 }
 
 func eventMonitor() {
 	// Make the HTTP GET request
+	killEventUrls := getKillEventUrls()
 	log.Info("Kill event urls: ", getKillEventUrls())
 
+	var wg sync.WaitGroup
+	eventChan := make(chan Event, len(killEventUrls)) // Buffer size should be equal to the number of goroutines
+	errorChan := make(chan error, len(killEventUrls))
+
+	// Start multiple goroutines
+
 	for _, url := range getKillEventUrls() {
-		getEvents(url)
+		wg.Add(1)
+		go getEvents(url, eventChan, errorChan, &wg)
 	}
 
+	// Close the channel once all goroutines have completed
+	go func() {
+		wg.Wait()
+		close(eventChan)
+		close(errorChan)
+	}()
+
+	// Collect and print results from the channel
+	for event := range eventChan {
+		log.Debug(event)
+	}
+	for err := range errorChan {
+		log.Error(err)
+	}
 }
