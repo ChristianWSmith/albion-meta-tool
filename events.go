@@ -228,10 +228,10 @@ func getEvents(url string, eventChan chan<- Event, errorChan chan<- error, wg *s
 	fmt.Println(url)
 }
 
-func eventMonitor() {
+func eventMonitor() ([]Event, error) {
 	// Make the HTTP GET request
 	killEventUrls := getKillEventUrls()
-	log.Info("Kill event urls: ", getKillEventUrls())
+	log.Debug("Kill event urls: ", getKillEventUrls())
 
 	var wg sync.WaitGroup
 	eventChan := make(chan Event, len(killEventUrls)) // Buffer size should be equal to the number of goroutines
@@ -251,11 +251,22 @@ func eventMonitor() {
 		close(errorChan)
 	}()
 
+	var events []Event
+	var errs []error
 	// Collect and print results from the channel
 	for event := range eventChan {
+		events = append(events, event)
 		log.Debug(event)
 	}
 	for err := range errorChan {
+		errs = append(errs, err)
 		log.Error(err)
 	}
+
+	var err error
+	if len(errs) != 0 {
+		err = fmt.Errorf("%v", errs)
+	}
+
+	return events, err
 }
