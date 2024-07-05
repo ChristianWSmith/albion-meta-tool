@@ -11,26 +11,6 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type Item struct {
-	Name        string
-	Tier        uint8
-	Enchantment uint8
-	Quality     uint8
-}
-
-type Build struct {
-	MainHand Item
-	OffHand  Item
-	Head     Item
-	Chest    Item
-	Foot     Item
-	Cape     Item
-	Potion   Item
-	Food     Item
-	Mount    Item
-	Bag      Item
-}
-
 type Event struct {
 	EventId              int64
 	KillerBuild          Build
@@ -60,37 +40,11 @@ func parseUint8(s string) (uint8, error) {
 }
 
 func resultToItem(result gjson.Result) (Item, error) {
-	var item Item
-	var err error
-
-	item_string := result.Get("Type").String()
-
-	if item_string == "" {
-		return item, nil
-	}
-
-	item.Tier, err = parseUint8(fmt.Sprintf("%c", item_string[1]))
+	item, err := typeStringToItem(result.Get("Type").String(), uint8(result.Get("Quality").Int()))
 	if err != nil {
-		log.Error("Failed to parse item string tier: ", item_string)
+		log.Error("Failed to convert result to item: ", result)
 		return item, err
 	}
-	item_string = item_string[3:]
-
-	if item_string[len(item_string)-2] == '@' {
-		item.Enchantment, err = parseUint8(fmt.Sprintf("%c", item_string[len(item_string)-1]))
-		if err != nil {
-			log.Error("Failed to parse item string enchantment: ", item_string)
-			return item, err
-		}
-		item_string = item_string[:len(item_string)-2]
-	} else {
-		item.Enchantment = 0
-	}
-
-	item.Name = item_string
-
-	item.Quality = uint8(result.Get("Quality").Int())
-
 	return item, nil
 }
 

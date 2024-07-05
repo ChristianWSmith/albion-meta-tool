@@ -1,5 +1,14 @@
 package main
 
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"sort"
+
+	"github.com/tidwall/gjson"
+)
+
 func getItemPrices(items []Item) (map[Item]float64, error) {
 	var discoveredPrices map[Item]float64
 	var unknownItems []Item
@@ -35,16 +44,123 @@ func getItemPrices(items []Item) (map[Item]float64, error) {
 		}
 	}
 
-	return itemPrices, nil
+	err = nil
+	for _, item := range items {
+		if itemPrices[item] == 0.0 {
+			log.Error("Failed to query or call API for item price: ", item)
+			err = fmt.Errorf("failed to query or call API for at least one item")
+		}
+	}
+
+	return itemPrices, err
 }
 
 func callPriceAPI(items []Item) (map[Item]float64, error) {
 	log.Debug("Calling price API for items: ", items)
 	prices := make(map[Item]float64)
+	qualityToItems := make(map[uint8][]Item)
 
 	for _, item := range items {
-		prices[item] = 1.0
+		qualityToItems[item.Quality] = append(qualityToItems[item.Quality], item)
+	}
+
+	for quality, itemsAtQuality := range qualityToItems {
+		qualityPrices, err := callPriceAPIForQuality(itemsAtQuality, quality)
+		if err != nil {
+			log.Error("Failed to call pricing api for items: ", itemsAtQuality)
+		}
+		for item, price := range qualityPrices {
+			prices[item] = price
+		}
 	}
 
 	return prices, nil
+}
+
+func callPriceAPIForQuality(items []Item, quality uint8) (map[Item]float64, error) {
+	prices := make(map[Item]float64)
+	urls := getPriceAPIUrls(items, quality)
+
+	for _, url := range urls {
+		priceGroups := make(map[string][]float64)
+		log.Debug("Calling price url: ", url)
+		response, err := http.Get(url)
+		if err != nil {
+			log.Error("The HTTP request failed with error ", err)
+			return prices, fmt.Errorf("the HTTP request failed with error %s", err)
+		}
+		defer response.Body.Close()
+
+		// Read the response body
+		body, err := io.ReadAll(response.Body)
+		if err != nil {
+			log.Error("Failed to read the response body: ", err)
+			return prices, fmt.Errorf("failed to read the response body: %s", err)
+
+		}
+
+		// Use Gjson to parse and query the JSON response
+		json := string(body)
+		if !gjson.Valid(json) {
+			log.Error("Invalid json resonse from url: ", url)
+			return prices, fmt.Errorf("invalid json response from url: %s", url)
+		}
+		// Example: Iterate over all events and print the Killer's Name
+		gjson.Parse(json).ForEach(func(_, result gjson.Result) bool {
+			price := result.Get("sell_price_min").Float()
+			if price == 0.0 {
+				return true
+			}
+			priceGroups[result.Get("item_id").String()] = append(priceGroups[result.Get("item_id").String()], price)
+			return true // keep iterating
+		})
+		for typeString, itemPrices := range priceGroups {
+			item, err := typeStringToItem(typeString, quality)
+			if err != nil {
+				log.Error("Failed to parse type string: ", typeString)
+				return prices, err
+			}
+			prices[item] = calculateMedian(itemPrices)
+		}
+	}
+
+	return prices, nil
+}
+
+func getPriceAPIUrls(items []Item, quality uint8) []string {
+	url := config.PriceUrl
+	var itemList string
+	var locations string
+
+	for _, item := range items {
+		itemList += itemToTypeString(item) + ","
+	}
+	itemList = itemList[:len(itemList)-1]
+
+	for _, location := range config.PriceLocations {
+		locations += location + "%2"
+	}
+	locations = locations[:len(locations)-2]
+
+	return []string{url + "/" + itemList + "%401.json?locations=" + locations + "&qualities=" + fmt.Sprintf("%d", quality+1)}
+}
+
+func calculateMedian(data []float64) float64 {
+	// Sort the data
+	sort.Float64s(data)
+
+	// Determine the median
+	n := len(data)
+	if n == 0 {
+		return 0.0
+	}
+
+	mid := n / 2
+	if n%2 == 1 {
+		// Odd number of elements
+		return data[mid]
+	} else {
+		// Even number of elements
+		return (data[mid-1] + data[mid]) / 2.0
+	}
 }
