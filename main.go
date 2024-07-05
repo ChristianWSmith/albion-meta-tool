@@ -1,19 +1,22 @@
 package main
 
 import (
-	"fmt"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 var config Config = defaultConfig()
+var log = logrus.New()
 
 func crash(message string, err error) {
-	logError(message, err)
+	log.Error(message, err)
 	os.Exit(1)
 }
 
 func main() {
 	var err error
+	log.SetLevel(config.LogLevel)
 
 	config, err = getConfig()
 	if err != nil {
@@ -30,7 +33,7 @@ func main() {
 		crash("Failed to initialize database", err)
 	}
 
-	logInfo(fmt.Sprintf("Config: %v", config), nil)
+	log.Info("Config: ", config)
 	// Your application logic here
 
 	eventMonitor()

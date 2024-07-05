@@ -2,12 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
-	"slices"
 	"time"
 
 	"github.com/BurntSushi/toml"
+	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -17,19 +16,19 @@ type Config struct {
 	PriceLocations      []string      `toml:"price_locations"`
 	PriceStaleThreshold time.Duration `toml:"price_stale_threshold"`
 	LogFile             string        `toml:"log_file"`
-	LogLevel            LogLevel      `toml:"log_level"`
+	LogLevel            logrus.Level  `toml:"log_level"`
 	Port                int           `toml:"port"`
 }
 
 func defaultConfig() Config {
 	return Config{
 		Database:            "amt.sqlite",
-		KillEventUrl:        "https://gameinfo.albiononline.com/api/gameinfo/events",       // ?limit={limit}&offset={offset}
+		KillEventUrl:        "https://gameinfo.albiononline.com/api/gameinfo/events",
 		PriceUrl:            "https://old.west.albion-online-data.com/api/v2/stats/Prices", // {itemList}.json
 		PriceLocations:      []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
 		PriceStaleThreshold: time.Duration(7*24) * time.Hour,
 		LogFile:             "amt.log",
-		LogLevel:            LogLevelInfo,
+		LogLevel:            logrus.PanicLevel,
 		Port:                8080,
 	}
 }
@@ -63,23 +62,20 @@ func getConfig() (Config, error) {
 
 	var config Config
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		logInfo("Config file not found, generating default config", nil)
+		log.Info("Config file not found, generating default config")
 		config = defaultConfig()
 		if err := saveConfigFile(configPath, config); err != nil {
-			logError("Failed saving default config", err)
+			log.Error("Failed saving default config", err)
 			return config, err
 		}
 	} else {
-		logInfo("Loading config file", nil)
+		log.Info("Loading config file")
 		var err error
 		config, err = loadConfigFile(configPath)
 		if err != nil {
-			logError("Failed loading config file", err)
+			log.Error("Failed loading config file", err)
 			return config, err
 		}
-	}
-	if !slices.Contains(LOG_LEVELS, config.LogLevel) {
-		return config, fmt.Errorf("invalid log level: %s", config.LogLevel)
 	}
 	return config, nil
 }
