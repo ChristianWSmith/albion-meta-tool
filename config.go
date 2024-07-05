@@ -25,7 +25,7 @@ func defaultConfig() Config {
 	return Config{
 		Database:            "amt.sqlite",
 		KillEventUrl:        "https://gameinfo.albiononline.com/api/gameinfo/events",
-		PriceUrl:            "https://old.west.albion-online-data.com/api/v2/stats/Prices", // {itemList}.json
+		PriceUrl:            "https://old.west.albion-online-data.com/api/v2/stats/History",
 		PriceLocations:      []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
 		PriceStaleThreshold: time.Duration(7*24) * time.Hour,
 		LogFile:             "amt.log",

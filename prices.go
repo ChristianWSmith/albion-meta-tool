@@ -108,11 +108,15 @@ func callPriceAPIForQuality(items []Item, quality uint8) (map[Item]float64, erro
 		}
 		// Example: Iterate over all events and print the Killer's Name
 		gjson.Parse(json).ForEach(func(_, result gjson.Result) bool {
-			price := result.Get("sell_price_min").Float()
-			if price == 0.0 {
-				return true
+			for _, priceRecord := range result.Get("data").Array() {
+				count := priceRecord.Get("item_count").Int()
+				price := priceRecord.Get("avg_price").Float()
+				if price != 0.0 {
+					for range count {
+						priceGroups[result.Get("item_id").String()] = append(priceGroups[result.Get("item_id").String()], price)
+					}
+				}
 			}
-			priceGroups[result.Get("item_id").String()] = append(priceGroups[result.Get("item_id").String()], price)
 			return true // keep iterating
 		})
 		for typeString, itemPrices := range priceGroups {
@@ -124,8 +128,13 @@ func callPriceAPIForQuality(items []Item, quality uint8) (map[Item]float64, erro
 			prices[item] = calculateMedian(itemPrices)
 		}
 	}
+	log.Info("Got prices: ", prices)
 
 	return prices, nil
+}
+
+func makeUrl(itemList string, locations string, quality uint8) string {
+	return config.PriceUrl + "/" + itemList + ".json?locations=" + locations + "&qualities=" + fmt.Sprintf("%d", quality+1) + "&time-scale=6"
 }
 
 func getPriceAPIUrls(items []Item, quality uint8) []string {
@@ -143,7 +152,7 @@ func getPriceAPIUrls(items []Item, quality uint8) []string {
 		if i == 50 {
 			i = 0
 			itemList = itemList[:len(itemList)-1]
-			urls = append(urls, config.PriceUrl+"/"+itemList+".json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
+			urls = append(urls, makeUrl(itemList, locations, quality))
 			itemList = ""
 		}
 		i += 1
@@ -151,7 +160,7 @@ func getPriceAPIUrls(items []Item, quality uint8) []string {
 	}
 	if itemList != "" {
 		itemList = itemList[:len(itemList)-1]
-		urls = append(urls, config.PriceUrl+"/"+itemList+".json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
+		urls = append(urls, makeUrl(itemList, locations, quality))
 	}
 
 	return urls
