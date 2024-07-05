@@ -292,6 +292,8 @@ func eventMonitor() {
 			}
 		}
 		duration := maxTime.Sub(minTime)
-		time.Sleep(time.Duration(duration.Seconds()/2) * time.Second)
+		sleepTime := time.Duration(duration.Seconds()/2) * time.Second
+		log.Info("sleeping for ", sleepTime.Seconds(), " seconds")
+		time.Sleep(sleepTime)
 	}
 }
