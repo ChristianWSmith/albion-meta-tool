@@ -23,6 +23,6 @@ go.work.sum
 
 # Albion Meta Tool
 albion-meta-tool
-amt.toml
-amt.sqlite
-amt.log
+*.toml
+*.sqlite
+*.log
