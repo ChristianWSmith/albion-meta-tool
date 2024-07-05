@@ -228,7 +228,7 @@ func getEvents(url string, eventChan chan<- Event, errorChan chan<- error, wg *s
 	fmt.Println(url)
 }
 
-func eventMonitor() ([]Event, error) {
+func getAllEvents() ([]Event, error) {
 	// Make the HTTP GET request
 	killEventUrls := getKillEventUrls()
 	log.Debug("Kill event urls: ", getKillEventUrls())
@@ -269,4 +269,29 @@ func eventMonitor() ([]Event, error) {
 	}
 
 	return events, err
+}
+
+func eventMonitor() {
+	var events []Event
+	var err error
+	var minTime time.Time
+	var maxTime time.Time
+
+	for {
+		events, err = getAllEvents()
+		if err != nil {
+			log.Error("Failed during get all events: ", err)
+		}
+
+		for _, event := range events {
+			if event.Timestamp.Compare(minTime) == -1 {
+				minTime = event.Timestamp
+			}
+			if event.Timestamp.Compare(maxTime) == 1 {
+				maxTime = event.Timestamp
+			}
+		}
+		duration := maxTime.Sub(minTime)
+		time.Sleep(time.Duration(duration.Seconds()/2) * time.Second)
+	}
 }
