@@ -59,6 +59,48 @@ func main() {
 			Enchantment: 2,
 			Quality:     0,
 		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        4,
+			Enchantment: 3,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        4,
+			Enchantment: 4,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        5,
+			Enchantment: 0,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        5,
+			Enchantment: 1,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        5,
+			Enchantment: 2,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        5,
+			Enchantment: 3,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        5,
+			Enchantment: 4,
+			Quality:     0,
+		},
 	})
 	log.Info("Prices: ", prices)
 

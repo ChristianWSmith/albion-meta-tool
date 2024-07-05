@@ -128,21 +128,32 @@ func callPriceAPIForQuality(items []Item, quality uint8) (map[Item]float64, erro
 }
 
 func getPriceAPIUrls(items []Item, quality uint8) []string {
-	url := config.PriceUrl
-	var itemList string
 	var locations string
-
-	for _, item := range items {
-		itemList += itemToTypeString(item) + ","
-	}
-	itemList = itemList[:len(itemList)-1]
-
 	for _, location := range config.PriceLocations {
 		locations += location + "%2"
 	}
 	locations = locations[:len(locations)-2]
+	var urls []string
 
-	return []string{url + "/" + itemList + "%401.json?locations=" + locations + "&qualities=" + fmt.Sprintf("%d", quality+1)}
+	i := 0
+	var itemList string
+
+	for _, item := range items {
+		if i == 50 {
+			i = 0
+			itemList = itemList[:len(itemList)-1]
+			urls = append(urls, config.PriceUrl+"/"+itemList+"%401.json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
+			itemList = ""
+		}
+		i += 1
+		itemList += itemToTypeString(item) + ","
+	}
+	if itemList != "" {
+		itemList = itemList[:len(itemList)-1]
+		urls = append(urls, config.PriceUrl+"/"+itemList+"%401.json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
+	}
+
+	return urls
 }
 
 func calculateMedian(data []float64) float64 {
