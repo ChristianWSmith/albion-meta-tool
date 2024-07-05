@@ -383,14 +383,10 @@ func initDatabase() error {
 			price REAL,
 			timestamp DATETIME
 		);
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_prices_unique ON prices (name, tier, enchantment, quality);
 	`
 	if _, err := db.Exec(createTables); err != nil {
 		log.Error("Failed to create tables: ", err)
-		return err
-	}
-	priceIndex := "CREATE UNIQUE INDEX IF NOT EXISTS idx_prices_unique ON prices (name, tier, enchantment, quality);"
-	if _, err := db.Exec(priceIndex); err != nil {
-		log.Error("Failed to create price index: ", err)
 		return err
 	}
 	return nil

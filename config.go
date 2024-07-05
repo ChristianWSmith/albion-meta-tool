@@ -17,6 +17,7 @@ type Config struct {
 	PriceStaleThreshold time.Duration `toml:"price_stale_threshold"`
 	LogFile             string        `toml:"log_file"`
 	LogLevel            logrus.Level  `toml:"log_level"`
+	PollEvents          bool          `toml:"poll_events"`
 	Port                int           `toml:"port"`
 }
 
@@ -29,6 +30,7 @@ func defaultConfig() Config {
 		PriceStaleThreshold: time.Duration(7*24) * time.Hour,
 		LogFile:             "amt.log",
 		LogLevel:            logrus.PanicLevel,
+		PollEvents:          true,
 		Port:                8080,
 	}
 }

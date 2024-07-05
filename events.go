@@ -285,7 +285,6 @@ func eventMonitor() {
 		maxTime = minTime
 		minTime = time.Now()
 		for _, event := range events {
-			getBuildPrice(event.KillerBuild)
 			if event.Timestamp.Compare(minTime) == -1 {
 				minTime = event.Timestamp
 			}

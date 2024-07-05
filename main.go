@@ -36,5 +36,17 @@ func main() {
 	log.Info("Config: ", config)
 	// Your application logic here
 
-	eventMonitor()
+	if config.PollEvents {
+		go eventMonitor()
+	}
+
+	prices, _ := getItemPrices([]Item{{
+		Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+		Tier:        4,
+		Enchantment: 0,
+		Quality:     0,
+	}})
+	log.Info("Price: ", prices)
+
+	select {}
 }
