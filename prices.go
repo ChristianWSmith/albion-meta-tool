@@ -209,5 +209,8 @@ func cachePricesFromEvents(events []Event) {
 		}
 	}
 
-	_, _ = getItemPrices(items)
+	_, err := getItemPrices(items)
+	if err != nil {
+		log.Error("Failed to get prices for items: ", items)
+	}
 }
