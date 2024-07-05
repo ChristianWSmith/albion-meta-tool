@@ -2,9 +2,72 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+func updatePrice(item Item, price float64) error {
+	var err error
+
+	db, err := sql.Open("sqlite3", config.Database)
+	if err != nil {
+		log.Error("Failed to open database: ", err)
+		return err
+	}
+	defer db.Close()
+
+	// Prepare the insert or update statement
+	query := `INSERT INTO prices (
+			name, tier, enchantment, quality, price, timestamp
+		) VALUES (?, ?, ?, ?, ?, ?)
+		ON CONFLICT(name, tier, enchantment, quality) DO UPDATE SET 
+			price = excluded.price,
+			timestamp = excluded.timestamp`
+
+	// Execute the insert or update statement
+	_, err = db.Exec(query, item.Name, item.Tier, item.Enchantment, item.Quality, price, time.Now())
+	if err != nil {
+		log.Error("Failed to insert price record for item: ", item)
+		return err
+	}
+
+	return nil
+}
+
+func queryPrice(item Item) (float64, error) {
+	var price float64
+	var timestamp time.Time
+
+	db, err := sql.Open("sqlite3", config.Database)
+	if err != nil {
+		log.Error("Failed to open database: ", err)
+		return price, err
+	}
+	defer db.Close()
+
+	// Prepare the query
+	query := `SELECT price, timestamp FROM prices WHERE name = ? AND tier = ? AND enchantment = ? AND quality = ?`
+
+	// Execute the query
+	err = db.QueryRow(query, item.Name, item.Tier, item.Enchantment, item.Quality).Scan(&price, &timestamp)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Info("No record found for item: ", item)
+		} else {
+			log.Error("Query failed for item: ", item)
+			return price, err
+		}
+	} else {
+		fmt.Printf("The price is: %.2f\n", price)
+	}
+	if time.Since(timestamp) > config.PriceStaleThreshold {
+		log.Info("Price is stale for item: ", item)
+		return 0.0, nil
+	}
+	return price, nil
+}
 
 func insertEvents(events []Event) error {
 	db, err := sql.Open("sqlite3", config.Database)
@@ -312,7 +375,8 @@ func initDatabase() error {
 			timestamp DATETIME
 		);
 		CREATE TABLE IF NOT EXISTS prices (
-			name TEXT PRIMARY KEY,
+		    id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT,
 			tier INTEGER,
 			enchantment INTEGER,
 			quality INTEGER,
@@ -321,7 +385,12 @@ func initDatabase() error {
 		);
 	`
 	if _, err := db.Exec(createTables); err != nil {
-		log.Error("Failed to create tables", err)
+		log.Error("Failed to create tables: ", err)
+		return err
+	}
+	priceIndex := "CREATE UNIQUE INDEX IF NOT EXISTS idx_prices_unique ON prices (name, tier, enchantment, quality);"
+	if _, err := db.Exec(priceIndex); err != nil {
+		log.Error("Failed to create price index: ", err)
 		return err
 	}
 	return nil

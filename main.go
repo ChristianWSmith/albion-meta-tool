@@ -20,17 +20,17 @@ func main() {
 
 	config, err = getConfig()
 	if err != nil {
-		crash("Failed while getting config", err)
+		crash("Failed while getting config: ", err)
 	}
 
 	err = initLogging()
 	if err != nil {
-		crash("Failed to initialize logging", err)
+		crash("Failed to initialize logging: ", err)
 	}
 
 	err = initDatabase()
 	if err != nil {
-		crash("Failed to initialize database", err)
+		crash("Failed to initialize database: ", err)
 	}
 
 	log.Info("Config: ", config)
