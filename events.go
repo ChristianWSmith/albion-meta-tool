@@ -235,6 +235,7 @@ func eventMonitor() {
 		if err != nil {
 			log.Error("Failed to insert events to database: ", err)
 		}
+		go cachePricesFromEvents(events)
 
 		maxTime = minTime
 		minTime = time.Now()

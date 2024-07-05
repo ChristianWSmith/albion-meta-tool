@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"sort"
+	"strings"
 
 	"github.com/tidwall/gjson"
 )
@@ -130,9 +131,9 @@ func callPriceAPIForQuality(items []Item, quality uint8) (map[Item]float64, erro
 func getPriceAPIUrls(items []Item, quality uint8) []string {
 	var locations string
 	for _, location := range config.PriceLocations {
-		locations += location + "%2"
+		locations += location + ","
 	}
-	locations = locations[:len(locations)-2]
+	locations = locations[:len(locations)-1]
 	var urls []string
 
 	i := 0
@@ -142,7 +143,7 @@ func getPriceAPIUrls(items []Item, quality uint8) []string {
 		if i == 50 {
 			i = 0
 			itemList = itemList[:len(itemList)-1]
-			urls = append(urls, config.PriceUrl+"/"+itemList+"%401.json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
+			urls = append(urls, config.PriceUrl+"/"+itemList+".json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
 			itemList = ""
 		}
 		i += 1
@@ -150,7 +151,7 @@ func getPriceAPIUrls(items []Item, quality uint8) []string {
 	}
 	if itemList != "" {
 		itemList = itemList[:len(itemList)-1]
-		urls = append(urls, config.PriceUrl+"/"+itemList+"%401.json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
+		urls = append(urls, config.PriceUrl+"/"+itemList+".json?locations="+locations+"&qualities="+fmt.Sprintf("%d", quality+1))
 	}
 
 	return urls
@@ -174,4 +175,39 @@ func calculateMedian(data []float64) float64 {
 		// Even number of elements
 		return (data[mid-1] + data[mid]) / 2.0
 	}
+}
+
+func cachePricesFromEvents(events []Event) {
+	itemsSet := make(map[Item]bool)
+	for _, event := range events {
+		itemsSet[event.KillerBuild.MainHand] = event.KillerBuild.MainHand.Name != ""
+		itemsSet[event.KillerBuild.OffHand] = event.KillerBuild.OffHand.Name != ""
+		itemsSet[event.KillerBuild.Head] = event.KillerBuild.Head.Name != ""
+		itemsSet[event.KillerBuild.Chest] = event.KillerBuild.Chest.Name != ""
+		itemsSet[event.KillerBuild.Foot] = event.KillerBuild.Foot.Name != ""
+		itemsSet[event.KillerBuild.Cape] = event.KillerBuild.Cape.Name != ""
+		itemsSet[event.KillerBuild.Potion] = event.KillerBuild.Potion.Name != ""
+		itemsSet[event.KillerBuild.Food] = event.KillerBuild.Food.Name != ""
+		itemsSet[event.KillerBuild.Mount] = event.KillerBuild.Mount.Name != ""
+		itemsSet[event.KillerBuild.Bag] = event.KillerBuild.Bag.Name != ""
+		itemsSet[event.VictimBuild.MainHand] = event.VictimBuild.MainHand.Name != ""
+		itemsSet[event.VictimBuild.OffHand] = event.VictimBuild.OffHand.Name != ""
+		itemsSet[event.VictimBuild.Head] = event.VictimBuild.Head.Name != ""
+		itemsSet[event.VictimBuild.Chest] = event.VictimBuild.Chest.Name != ""
+		itemsSet[event.VictimBuild.Foot] = event.VictimBuild.Foot.Name != ""
+		itemsSet[event.VictimBuild.Cape] = event.VictimBuild.Cape.Name != ""
+		itemsSet[event.VictimBuild.Potion] = event.VictimBuild.Potion.Name != ""
+		itemsSet[event.VictimBuild.Food] = event.VictimBuild.Food.Name != ""
+		itemsSet[event.VictimBuild.Mount] = event.VictimBuild.Mount.Name != ""
+		itemsSet[event.VictimBuild.Bag] = event.VictimBuild.Bag.Name != ""
+	}
+
+	var items []Item
+	for item, included := range itemsSet {
+		if included && !strings.HasSuffix(item.Name, "_NONTRADABLE") {
+			items = append(items, item)
+		}
+	}
+
+	_, _ = getItemPrices(items)
 }
