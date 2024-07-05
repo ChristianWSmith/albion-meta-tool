@@ -6,6 +6,12 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func insertEvents(events []Event) error {
+	// TODO
+	log.Debug(events)
+	return nil
+}
+
 func initDatabase() error {
 	// Connect to the SQLite database
 	db, err := sql.Open("sqlite3", config.Database)

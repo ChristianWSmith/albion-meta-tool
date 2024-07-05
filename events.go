@@ -282,6 +282,10 @@ func eventMonitor() {
 		if err != nil {
 			log.Error("Failed during get all events: ", err)
 		}
+		err = insertEvents(events)
+		if err != nil {
+			log.Error("Failed to insert events to database: ", err)
+		}
 
 		for _, event := range events {
 			if event.Timestamp.Compare(minTime) == -1 {
