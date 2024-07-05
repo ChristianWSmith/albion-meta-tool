@@ -3,14 +3,13 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func updatePrice(item Item, price float64) error {
-	var err error
-
+func updatePrices(itemPrices map[Item]float64) error {
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {
 		log.Error("Failed to open database: ", err)
@@ -18,55 +17,97 @@ func updatePrice(item Item, price float64) error {
 	}
 	defer db.Close()
 
+	// Begin a transaction
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			// Rollback the transaction if there's an error
+			tx.Rollback()
+			log.Println("Transaction rolled back due to error:", err)
+		} else {
+			// Commit the transaction if successful
+			err = tx.Commit()
+			if err != nil {
+				log.Println("Error committing transaction:", err)
+			}
+		}
+	}()
+
 	// Prepare the insert or update statement
-	query := `INSERT INTO prices (
+	stmt, err := tx.Prepare(`INSERT INTO prices (
 			name, tier, enchantment, quality, price, timestamp
 		) VALUES (?, ?, ?, ?, ?, ?)
 		ON CONFLICT(name, tier, enchantment, quality) DO UPDATE SET 
 			price = excluded.price,
-			timestamp = excluded.timestamp`
-
-	// Execute the insert or update statement
-	_, err = db.Exec(query, item.Name, item.Tier, item.Enchantment, item.Quality, price, time.Now())
+			timestamp = excluded.timestamp`)
 	if err != nil {
-		log.Error("Failed to insert price record for item: ", item)
 		return err
+	}
+	defer stmt.Close()
+
+	// Iterate through items and execute the statement
+	for item, price := range itemPrices {
+		_, err = stmt.Exec(item.Name, item.Tier, item.Enchantment, item.Quality, price, time.Now())
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func queryPrice(item Item) (float64, error) {
-	var price float64
-	var timestamp time.Time
+func queryPrices(items []Item) (map[Item]float64, error) {
+	itemPrices := make(map[Item]float64)
 
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {
 		log.Error("Failed to open database: ", err)
-		return price, err
+		return itemPrices, err
 	}
 	defer db.Close()
 
 	// Prepare the query
-	query := `SELECT price, timestamp FROM prices WHERE name = ? AND tier = ? AND enchantment = ? AND quality = ?`
+	var placeholders []string
+	var params []interface{}
+	for _, item := range items {
+		placeholders = append(placeholders, "(?, ?, ?, ?)")
+		params = append(params, item.Name, item.Tier, item.Enchantment, item.Quality)
+	}
+	query := fmt.Sprintf(`SELECT name, tier, enchantment, quality, price, timestamp FROM prices WHERE (name, tier, enchantment, quality) IN (%s)`, strings.Join(placeholders, ","))
 
 	// Execute the query
-	err = db.QueryRow(query, item.Name, item.Tier, item.Enchantment, item.Quality).Scan(&price, &timestamp)
+	rows, err := db.Query(query, params...)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			log.Info("No record found for item: ", item)
-		} else {
-			log.Error("Query failed for item: ", item)
-			return price, err
+		log.Error("Failed to execute query for item prices: ", err)
+		return itemPrices, err
+	}
+	defer rows.Close()
+
+	// Iterate through the result set
+	for rows.Next() {
+		var item Item
+		var price float64
+		var timestamp time.Time
+		if err := rows.Scan(&item.Name, &item.Tier, &item.Enchantment, &item.Quality, &price, &timestamp); err != nil {
+			log.Error("Failed to scan record into item struct: ", err)
+			return itemPrices, err
 		}
-	} else {
-		fmt.Printf("The price is: %.2f\n", price)
+		// Store the price in the map with the item as the key
+		if time.Since(timestamp) > config.PriceStaleThreshold {
+			itemPrices[item] = 0.0
+		} else {
+			itemPrices[item] = price
+		}
 	}
-	if time.Since(timestamp) > config.PriceStaleThreshold {
-		log.Info("Price is stale for item: ", item)
-		return 0.0, nil
+	if err := rows.Err(); err != nil {
+		log.Error("Row error encountered while querying item prices: ", err)
+		return itemPrices, err
 	}
-	return price, nil
+
+	return itemPrices, nil
 }
 
 func insertEvents(events []Event) error {

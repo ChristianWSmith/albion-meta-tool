@@ -1,44 +1,45 @@
 package main
 
 func getItemPrices(items []Item) (map[Item]float64, error) {
-	var discovered_prices map[Item]float64
-	var unknown_items []Item
-	var price float64
+	var discoveredPrices map[Item]float64
+	var unknownItems []Item
 	var err error
+	var itemPrices map[Item]float64
 
-	prices := make(map[Item]float64)
+	itemPrices, err = queryPrices(items)
+	if err != nil {
+		log.Error("Failed to query prices for items: ", items)
+		return itemPrices, err
+	}
 
 	for _, item := range items {
-		price, err = queryPrice(item) // TODO: batch this
-		if err != nil {
-			log.Error("Failed to query for price for item: ", item)
-			return prices, err
-		}
-		if price == 0.0 {
-			unknown_items = append(unknown_items, item)
-		} else {
-			prices[item] = price
+		if itemPrices[item] == 0.0 {
+			unknownItems = append(unknownItems, item)
 		}
 	}
 
-	discovered_prices, err = callPriceAPI(unknown_items)
-	if err != nil {
-		log.Error("Failed to get prices for: ", unknown_items)
-		return prices, err
-	}
-	for item, price := range discovered_prices {
-		err = updatePrice(item, price) // TODO: batch this
+	if len(unknownItems) > 0 {
+		log.Debug("Unknown items: ", unknownItems)
+		discoveredPrices, err = callPriceAPI(unknownItems)
 		if err != nil {
-			log.Error("Failed to update prices for item: ", item)
-			return prices, err
+			log.Error("Failed to call price API for prices for: ", unknownItems)
+			return itemPrices, err
 		}
-		prices[item] = price
+		err = updatePrices(discoveredPrices)
+		if err != nil {
+			log.Error("Failed to update prices for items: ", discoveredPrices)
+			return itemPrices, err
+		}
+		for item, price := range discoveredPrices {
+			itemPrices[item] = price
+		}
 	}
 
-	return prices, nil
+	return itemPrices, nil
 }
 
 func callPriceAPI(items []Item) (map[Item]float64, error) {
+	log.Debug("Calling price API for items: ", items)
 	prices := make(map[Item]float64)
 
 	for _, item := range items {

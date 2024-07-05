@@ -40,13 +40,27 @@ func main() {
 		go eventMonitor()
 	}
 
-	prices, _ := getItemPrices([]Item{{
-		Name:        "MAIN_CURSEDSTAFF_UNDEAD",
-		Tier:        4,
-		Enchantment: 0,
-		Quality:     0,
-	}})
-	log.Info("Price: ", prices)
+	prices, _ := getItemPrices([]Item{
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        4,
+			Enchantment: 0,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        4,
+			Enchantment: 1,
+			Quality:     0,
+		},
+		{
+			Name:        "MAIN_CURSEDSTAFF_UNDEAD",
+			Tier:        4,
+			Enchantment: 2,
+			Quality:     0,
+		},
+	})
+	log.Info("Prices: ", prices)
 
 	select {}
 }
