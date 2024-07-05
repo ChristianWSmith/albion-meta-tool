@@ -149,7 +149,7 @@ func getPriceAPIUrls(items []Item, quality uint8) []string {
 	var itemList string
 
 	for _, item := range items {
-		if i == 50 {
+		if i == 50 { // TODO: make this actually respect the 2048 character URL limit, rather than just guessing at 50
 			i = 0
 			itemList = itemList[:len(itemList)-1]
 			urls = append(urls, makeUrl(itemList, locations, quality))
