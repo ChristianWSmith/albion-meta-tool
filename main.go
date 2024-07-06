@@ -40,5 +40,5 @@ func main() {
 		go eventMonitor()
 	}
 
-	select {}
+	startAPI()
 }
