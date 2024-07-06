@@ -13,13 +13,8 @@ type RequestBody struct {
 	Email *string `json:"email"`
 }
 
-// Define a struct to represent the response body
-type ResponseBody struct {
-	Message string `json:"message"`
-}
-
 // Handler function for the endpoint
-func handler(w http.ResponseWriter, r *http.Request) {
+func reportHandler(w http.ResponseWriter, r *http.Request) {
 	var reqBody RequestBody
 
 	// Decode the JSON request body
@@ -67,7 +62,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func startAPI() {
-	http.HandleFunc("/hello", handler)
+	http.HandleFunc("/report", reportHandler)
 	log.Info("Server starting on port ", config.Port, "...")
 	log.Error(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
 }
