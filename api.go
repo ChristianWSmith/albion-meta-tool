@@ -249,11 +249,21 @@ func generateReport() ([][]string, error) {
 
 	}
 
+	// get human readable
+	var itemsThatHaveStats []Item
+	for item := range itemsToStats {
+		itemsThatHaveStats = append(itemsThatHaveStats, item)
+	}
+	humanReadableNamesBatch, err := manyToHumanReadable(itemsThatHaveStats)
+	if err != nil {
+		log.Error("Failed to fetch some human readable names during report generation: ", err)
+	}
+
 	// format to csv
 	response = append(response, []string{"item_id", "tier", "enchantment", "equivalence", "usages", "silver_ratio", "kills", "deaths", "silver_gained", "silver_lost"})
 	for item, stats := range itemsToStats {
 		response = append(response, []string{
-			item.Name,
+			humanReadableNamesBatch[item.Name],
 			fmt.Sprintf("%d", item.Tier),
 			fmt.Sprintf("%d", item.Enchantment),
 			fmt.Sprintf("%d", item.Tier+item.Enchantment),
