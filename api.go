@@ -268,10 +268,10 @@ func generateReport() ([][]string, error) {
 			fmt.Sprintf("%d", item.Enchantment),
 			fmt.Sprintf("%d", item.Tier+item.Enchantment),
 			fmt.Sprintf("%d", stats.Kills+stats.Deaths),
-			fmt.Sprintf("%f", stats.SilverGained/math.Max(stats.SilverLost, 1.0)),
+			fmt.Sprintf("%f", stats.SilverGained*0.7/math.Max(stats.SilverLost, 1.0)),
 			fmt.Sprintf("%d", stats.Kills),
 			fmt.Sprintf("%d", stats.Deaths),
-			fmt.Sprintf("%f", stats.SilverGained),
+			fmt.Sprintf("%f", stats.SilverGained*0.7),
 			fmt.Sprintf("%f", stats.SilverLost),
 		})
 	}
