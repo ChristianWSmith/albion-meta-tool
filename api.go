@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -42,14 +43,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		email = *reqBody.Email
 	}
 
-	// Create a response
-	response := ResponseBody{
-		Message: "Hello, " + name + "! Your email is " + email,
+	// Create a response in CSV format
+	response := [][]string{
+		{"Message"},
+		{"Hello, " + name + "! Your email is " + email},
 	}
 
-	// Encode and send the JSON response
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(response); err != nil {
+	// Encode and send the CSV response
+	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", "attachment;filename=response.csv")
+	writer := csv.NewWriter(w)
+	for _, record := range response {
+		if err := writer.Write(record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+	writer.Flush()
+	if err := writer.Error(); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
