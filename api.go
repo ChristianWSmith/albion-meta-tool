@@ -2,46 +2,17 @@ package main
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-// Define a struct to represent the request body
-type RequestBody struct {
-	Name  *string `json:"name"`
-	Email *string `json:"email"`
-}
-
 // Handler function for the endpoint
 func reportHandler(w http.ResponseWriter, r *http.Request) {
-	var reqBody RequestBody
-
-	// Decode the JSON request body
-	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// Set default values for optional fields if they are nil
-	defaultName := "Guest"
-	defaultEmail := "guest@example.com"
-
-	name := defaultName
-	email := defaultEmail
-
-	if reqBody.Name != nil {
-		name = *reqBody.Name
-	}
-
-	if reqBody.Email != nil {
-		email = *reqBody.Email
-	}
-
 	// Create a response in CSV format
 	response := [][]string{
-		{"Message"},
-		{"Hello, " + name + "! Your email is " + email},
+		{"col1", "col2", "col3"},
+		{"val1", "val2", "val3"},
+		{"val4", "val5", "val6"},
 	}
 
 	// Encode and send the CSV response
