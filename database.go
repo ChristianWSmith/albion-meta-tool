@@ -416,3 +416,47 @@ func queryAllEvents() ([]Event, error) {
 
 	return events, nil
 }
+
+func getNumEvents() (int, error) {
+	var count int
+	db, err := sql.Open("sqlite3", config.Database)
+	if err != nil {
+		log.Error("Failed to open database: ", err)
+		return count, err
+	}
+	defer db.Close()
+
+	// Query to count rows in a table
+	query := "SELECT COUNT(*) FROM events"
+
+	// Execute the query
+	err = db.QueryRow(query).Scan(&count)
+	if err != nil {
+		log.Error("Error while getting number of events: ", err)
+		return count, err
+	}
+
+	return count, nil
+}
+
+func getNumPrices() (int, error) {
+	var count int
+	db, err := sql.Open("sqlite3", config.Database)
+	if err != nil {
+		log.Error("Failed to open database: ", err)
+		return count, err
+	}
+	defer db.Close()
+
+	// Query to count rows in a table
+	query := "SELECT COUNT(*) FROM prices"
+
+	// Execute the query
+	err = db.QueryRow(query).Scan(&count)
+	if err != nil {
+		log.Error("Error while getting number of prices: ", err)
+		return count, err
+	}
+
+	return count, nil
+}

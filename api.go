@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"math"
 	"net/http"
@@ -303,8 +304,45 @@ func reportHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+type StatsResponse struct {
+	NumEvents int `json:"num_events"`
+	NumPrices int `json:"num_prices"`
+}
+
+func statsHandler(w http.ResponseWriter, _ *http.Request) {
+	// Create sample data
+
+	numEvents, err := getNumEvents()
+	if err != nil {
+		log.Error("Failed to get number of events during API call")
+	}
+	numPrices, err := getNumPrices()
+	if err != nil {
+		log.Error("Failed to get number of prices during API call")
+	}
+
+	responseData := StatsResponse{
+		NumEvents: numEvents,
+		NumPrices: numPrices,
+	}
+
+	// Marshal responseData into JSON format
+	responseJSON, err := json.Marshal(responseData)
+	if err != nil {
+		http.Error(w, "Failed to marshal JSON", http.StatusInternalServerError)
+		return
+	}
+
+	// Set Content-Type header to application/json
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write JSON response
+	w.Write(responseJSON)
+}
+
 func startAPI() {
 	http.HandleFunc("/report", reportHandler)
+	http.HandleFunc("/stats", statsHandler)
 	log.Info("Server starting on port ", config.Port, "...")
 	log.Error(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
 }
