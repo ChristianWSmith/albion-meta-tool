@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"time"
 )
 
 type ItemStats struct {
@@ -286,7 +287,7 @@ func reportHandler(w http.ResponseWriter, _ *http.Request) {
 
 	// Encode and send the CSV response
 	w.Header().Set("Content-Type", "text/csv")
-	w.Header().Set("Content-Disposition", "attachment;filename=report.csv")
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=report-%d.csv", time.Now().Unix()))
 	writer := csv.NewWriter(w)
 	for _, record := range response {
 		if err := writer.Write(record); err != nil {
