@@ -229,7 +229,7 @@ func generateReport() ([][]string, error) {
 }
 
 // Handler function for the endpoint
-func reportHandler(w http.ResponseWriter, r *http.Request) {
+func reportHandler(w http.ResponseWriter, _ *http.Request) {
 	// Create a response in CSV format
 	response, _ := generateReport()
 

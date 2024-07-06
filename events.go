@@ -249,6 +249,10 @@ func eventMonitor() {
 		}
 		duration := maxTime.Sub(minTime)
 		sleepTime := duration / 2
+		minSleepTime := time.Duration(30.0 * time.Second)
+		if sleepTime < minSleepTime {
+			sleepTime = minSleepTime
+		}
 		log.Info("Event monitor sleeping for ", sleepTime.Seconds(), " seconds")
 		time.Sleep(sleepTime)
 	}
