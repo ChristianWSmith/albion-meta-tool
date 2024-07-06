@@ -86,7 +86,45 @@ func updatePrices(itemPrices map[Item]float64) error {
 	return nil
 }
 
+func splitArray(arr []Item, maxSize int) [][]Item {
+	var result [][]Item
+
+	for i := 0; i < len(arr); i += maxSize {
+		end := i + maxSize
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		result = append(result, arr[i:end])
+	}
+
+	return result
+}
+
 func queryPrices(items []Item) (map[Item]float64, error) {
+	itemPrices := make(map[Item]float64)
+	var errs []error
+
+	itemBatches := splitArray(items, 249)
+
+	for _, itemBatch := range itemBatches {
+		itemBatchPrices, err := queryPricesBatch(itemBatch)
+		if err != nil {
+			log.Error("Failed to query price batch: ", itemBatchPrices)
+		}
+		for batchItem, batchPrice := range itemBatchPrices {
+			itemPrices[batchItem] = batchPrice
+		}
+	}
+
+	if len(errs) != 0 {
+		return itemPrices, fmt.Errorf("%v", errs)
+	}
+	return itemPrices, nil
+}
+
+func queryPricesBatch(items []Item) (map[Item]float64, error) {
 	itemPrices := make(map[Item]float64)
 
 	db, err := sql.Open("sqlite3", config.Database)

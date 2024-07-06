@@ -68,144 +68,185 @@ func generateReport() ([][]string, error) {
 		}
 		if buildFilter.MainHand {
 			if event.KillerBuild.MainHand.Name != "" {
-				stats := itemsToStats[event.KillerBuild.MainHand]
+				item := event.KillerBuild.MainHand
+				item.Quality = 0
+				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
-				itemsToStats[event.KillerBuild.MainHand] = stats
+				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.MainHand.Name != "" {
-				stats := itemsToStats[event.VictimBuild.MainHand]
+				item := event.VictimBuild.MainHand
+				item.Quality = 0
+				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.MainHand] = stats
+				itemsToStats[item] = stats
+			}
+			if buildFilter.OffHand {
+				if event.KillerBuild.OffHand.Name != "" {
+					item := event.KillerBuild.OffHand
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.OffHand.Name != "" {
+					item := event.VictimBuild.OffHand
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Head {
+				if event.KillerBuild.Head.Name != "" {
+					item := event.KillerBuild.Head
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Head.Name != "" {
+					item := event.VictimBuild.Head
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Chest {
+				if event.KillerBuild.Chest.Name != "" {
+					item := event.KillerBuild.Chest
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Chest.Name != "" {
+					item := event.VictimBuild.Chest
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Foot {
+				if event.KillerBuild.Foot.Name != "" {
+					item := event.KillerBuild.Foot
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Foot.Name != "" {
+					item := event.VictimBuild.Foot
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Cape {
+				if event.KillerBuild.Cape.Name != "" {
+					item := event.KillerBuild.Cape
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Cape.Name != "" {
+					item := event.VictimBuild.Cape
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Potion {
+				if event.KillerBuild.Potion.Name != "" {
+					item := event.KillerBuild.Potion
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Potion.Name != "" {
+					item := event.VictimBuild.Potion
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Food {
+				if event.KillerBuild.Food.Name != "" {
+					item := event.KillerBuild.Food
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Food.Name != "" {
+					item := event.VictimBuild.Food
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Mount {
+				if event.KillerBuild.Mount.Name != "" {
+					item := event.KillerBuild.Mount
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Mount.Name != "" {
+					item := event.VictimBuild.Mount
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
+			}
+			if buildFilter.Bag {
+				if event.KillerBuild.Bag.Name != "" {
+					item := event.KillerBuild.Bag
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverGained += buildPrices[event.VictimBuild]
+					stats.Kills += 1
+					itemsToStats[item] = stats
+				}
+				if event.VictimBuild.Bag.Name != "" {
+					item := event.VictimBuild.Bag
+					item.Quality = 0
+					stats := itemsToStats[item]
+					stats.SilverLost += buildPrices[event.VictimBuild]
+					stats.Deaths += 1
+					itemsToStats[item] = stats
+				}
 			}
 		}
-		if buildFilter.OffHand {
-			if event.KillerBuild.OffHand.Name != "" {
-				stats := itemsToStats[event.KillerBuild.OffHand]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.OffHand] = stats
-			}
-			if event.VictimBuild.OffHand.Name != "" {
-				stats := itemsToStats[event.VictimBuild.OffHand]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.OffHand] = stats
-			}
-		}
-		if buildFilter.Head {
-			if event.KillerBuild.Head.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Head]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Head] = stats
-			}
-			if event.VictimBuild.Head.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Head]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Head] = stats
-			}
-		}
-		if buildFilter.Chest {
-			if event.KillerBuild.Chest.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Chest]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Chest] = stats
-			}
-			if event.VictimBuild.Chest.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Chest]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Chest] = stats
-			}
-		}
-		if buildFilter.Foot {
-			if event.KillerBuild.Foot.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Foot]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Foot] = stats
-			}
-			if event.VictimBuild.Foot.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Foot]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Foot] = stats
-			}
-		}
-		if buildFilter.Cape {
-			if event.KillerBuild.Cape.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Cape]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Cape] = stats
-			}
-			if event.VictimBuild.Cape.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Cape]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Cape] = stats
-			}
-		}
-		if buildFilter.Food {
-			if event.KillerBuild.Food.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Food]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Food] = stats
-			}
-			if event.VictimBuild.Food.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Food]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Food] = stats
-			}
-		}
-		if buildFilter.Potion {
-			if event.KillerBuild.Potion.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Potion]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Potion] = stats
-			}
-			if event.VictimBuild.Potion.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Potion]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Potion] = stats
-			}
-		}
-		if buildFilter.Mount {
-			if event.KillerBuild.Mount.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Mount]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Mount] = stats
-			}
-			if event.VictimBuild.Mount.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Mount]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Mount] = stats
-			}
-		}
-		if buildFilter.Bag {
-			if event.KillerBuild.Bag.Name != "" {
-				stats := itemsToStats[event.KillerBuild.Bag]
-				stats.SilverGained += buildPrices[event.VictimBuild]
-				stats.Kills += 1
-				itemsToStats[event.KillerBuild.Bag] = stats
-			}
-			if event.VictimBuild.Bag.Name != "" {
-				stats := itemsToStats[event.VictimBuild.Bag]
-				stats.SilverLost += buildPrices[event.VictimBuild]
-				stats.Deaths += 1
-				itemsToStats[event.VictimBuild.Bag] = stats
-			}
-		}
+
 	}
 
 	// format to csv
