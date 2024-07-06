@@ -38,6 +38,7 @@ func main() {
 
 	if config.PollEvents {
 		go eventMonitor()
+		go databaseCleanup()
 	}
 
 	startAPI()

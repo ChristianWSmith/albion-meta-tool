@@ -9,6 +9,33 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func databaseCleanup() {
+	for {
+		time.Sleep(config.EventCleanupInterval)
+
+		db, err := sql.Open("sqlite3", config.Database)
+		if err != nil {
+			log.Error("Failed to open database: ", err)
+		}
+
+		threshold := time.Now().Add(-config.EventStaleThreshold)
+
+		query := `DELETE FROM events WHERE timestamp < ?`
+		result, err := db.Exec(query, threshold)
+		if err != nil {
+			log.Error("Failed to clean up database: ", err)
+		}
+
+		rowsAffected, err := result.RowsAffected()
+		if err != nil {
+			log.Error("Failed to get rows affected during clean up database: ", err)
+		}
+		log.Debug("Deleted ", rowsAffected, " old records")
+
+		db.Close()
+	}
+}
+
 func updatePrices(itemPrices map[Item]float64) error {
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {

@@ -10,28 +10,32 @@ import (
 )
 
 type Config struct {
-	Database            string        `toml:"database"`
-	KillEventUrl        string        `toml:"albion_event_url"`
-	PriceUrl            string        `toml:"albion_online_data_url"`
-	PriceLocations      []string      `toml:"price_locations"`
-	PriceStaleThreshold time.Duration `toml:"price_stale_threshold"`
-	LogFile             string        `toml:"log_file"`
-	LogLevel            logrus.Level  `toml:"log_level"`
-	PollEvents          bool          `toml:"poll_events"`
-	Port                int           `toml:"port"`
+	Database             string        `toml:"database"`
+	KillEventUrl         string        `toml:"albion_event_url"`
+	PriceUrl             string        `toml:"albion_online_data_url"`
+	PriceLocations       []string      `toml:"price_locations"`
+	PriceStaleThreshold  time.Duration `toml:"price_stale_threshold"`
+	EventStaleThreshold  time.Duration `toml:"event_stale_threshold"`
+	EventCleanupInterval time.Duration `toml:"event_cleanup_interval"`
+	LogFile              string        `toml:"log_file"`
+	LogLevel             logrus.Level  `toml:"log_level"`
+	PollEvents           bool          `toml:"poll_events"`
+	Port                 int           `toml:"port"`
 }
 
 func defaultConfig() Config {
 	return Config{
-		Database:            "amt.sqlite",
-		KillEventUrl:        "https://gameinfo.albiononline.com/api/gameinfo/events",
-		PriceUrl:            "https://old.west.albion-online-data.com/api/v2/stats/History",
-		PriceLocations:      []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
-		PriceStaleThreshold: time.Duration(7*24) * time.Hour,
-		LogFile:             "amt.log",
-		LogLevel:            logrus.PanicLevel,
-		PollEvents:          true,
-		Port:                8080,
+		Database:             "amt.sqlite",
+		KillEventUrl:         "https://gameinfo.albiononline.com/api/gameinfo/events",
+		PriceUrl:             "https://old.west.albion-online-data.com/api/v2/stats/History",
+		PriceLocations:       []string{"Lymhurst", "Thetford", "FortSterling", "Martlock", "Bridgewatch"},
+		PriceStaleThreshold:  time.Duration(7*24) * time.Hour,
+		EventStaleThreshold:  time.Duration(7*24) * time.Hour,
+		EventCleanupInterval: time.Duration(24) * time.Hour,
+		LogFile:              "amt.log",
+		LogLevel:             logrus.PanicLevel,
+		PollEvents:           true,
+		Port:                 8080,
 	}
 }
 
