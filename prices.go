@@ -223,3 +223,76 @@ func cachePricesFromEvents(events []Event) {
 		log.Debug("Failed to get prices for items: ", items)
 	}
 }
+
+func getBuildPrices(builds []Build, itemPrices map[Item]float64, filter BuildFilter) map[Build]float64 {
+	buildPrices := make(map[Build]float64)
+
+	for _, build := range builds {
+		price := 0.0
+		if filter.MainHand && build.MainHand.Name != "" {
+			if itemPrices[build.MainHand] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.MainHand]
+		}
+		if filter.OffHand && build.OffHand.Name != "" {
+			if itemPrices[build.OffHand] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.OffHand]
+		}
+		if filter.Head && build.Head.Name != "" {
+			if itemPrices[build.Head] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Head]
+		}
+		if filter.Chest && build.Chest.Name != "" {
+			if itemPrices[build.Chest] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Chest]
+		}
+		if filter.Foot && build.Foot.Name != "" {
+			if itemPrices[build.Foot] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Foot]
+		}
+		if filter.Cape && build.Cape.Name != "" {
+			if itemPrices[build.Cape] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Cape]
+		}
+		if filter.Potion && build.Potion.Name != "" {
+			if itemPrices[build.Potion] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Potion]
+		}
+		if filter.Food && build.Food.Name != "" {
+			if itemPrices[build.Food] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Food]
+		}
+		if filter.Mount && build.Mount.Name != "" {
+			if itemPrices[build.Mount] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Mount]
+		}
+		if filter.Bag && build.Bag.Name != "" {
+			if itemPrices[build.Bag] == 0.0 {
+				continue
+			}
+			price += itemPrices[build.Bag]
+		}
+		if price != 0.0 {
+			buildPrices[build] = price
+		}
+	}
+
+	return buildPrices
+}

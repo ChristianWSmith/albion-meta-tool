@@ -22,6 +22,19 @@ type Build struct {
 	Bag      Item
 }
 
+type BuildFilter struct {
+	MainHand bool
+	OffHand  bool
+	Head     bool
+	Chest    bool
+	Foot     bool
+	Cape     bool
+	Potion   bool
+	Food     bool
+	Mount    bool
+	Bag      bool
+}
+
 func typeStringToItem(typeString string, quality uint8) (Item, error) {
 	var item Item
 	var err error
@@ -60,4 +73,41 @@ func itemToTypeString(item Item) string {
 		return fmt.Sprintf("T%d_%s", item.Tier, item.Name)
 	}
 	return fmt.Sprintf("T%d_%s@%d", item.Tier, item.Name, item.Enchantment)
+}
+
+func getItemsFromBuilds(builds []Build, filter BuildFilter) []Item {
+	var items []Item
+	for _, build := range builds {
+		if filter.MainHand && build.MainHand.Name != "" {
+			items = append(items, build.MainHand)
+		}
+		if filter.OffHand && build.OffHand.Name != "" {
+			items = append(items, build.OffHand)
+		}
+		if filter.Head && build.Head.Name != "" {
+			items = append(items, build.Head)
+		}
+		if filter.Chest && build.Chest.Name != "" {
+			items = append(items, build.Chest)
+		}
+		if filter.Foot && build.Foot.Name != "" {
+			items = append(items, build.Foot)
+		}
+		if filter.Cape && build.Cape.Name != "" {
+			items = append(items, build.Cape)
+		}
+		if filter.Potion && build.Potion.Name != "" {
+			items = append(items, build.Potion)
+		}
+		if filter.Food && build.Food.Name != "" {
+			items = append(items, build.Food)
+		}
+		if filter.Mount && build.Mount.Name != "" {
+			items = append(items, build.Mount)
+		}
+		if filter.Bag && build.Bag.Name != "" {
+			items = append(items, build.Bag)
+		}
+	}
+	return items
 }
