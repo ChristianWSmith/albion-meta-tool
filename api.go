@@ -8,6 +8,16 @@ import (
 
 func generateReport() [][]string {
 
+	// TODO: finish this
+	// get all of the events
+	// filter for those with 1 participant
+	// get all the builds
+	// get all the builds which we can calculate the cost of fully and do it
+	// get all of the items from those builds
+	// for each build, for each item in it, add the silver gained/lost, kills/deaths, cost
+	// for each item stats, divide the cost by the kills+deaths to get an average
+	// format items to csv
+
 	response := [][]string{}
 	events, err := queryAllEvents()
 	if err != nil {
