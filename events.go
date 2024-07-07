@@ -225,6 +225,9 @@ func eventMonitor() {
 	var err error
 	var minTime time.Time
 	var maxTime time.Time
+	var previousSleepTime time.Duration
+
+	previousSleepTime = time.Duration(300.0 * time.Second)
 
 	for {
 		events, err = getAllEvents()
@@ -250,10 +253,14 @@ func eventMonitor() {
 		duration := maxTime.Sub(minTime)
 		sleepTime := duration / 2
 		minSleepTime := time.Duration(30.0 * time.Second)
+		maxSleepTime := previousSleepTime * 2.0
 		if sleepTime < minSleepTime {
 			sleepTime = minSleepTime
+		} else if sleepTime > maxSleepTime {
+			sleepTime = maxSleepTime
 		}
 		log.Info("Event monitor sleeping for ", sleepTime.Seconds(), " seconds")
 		time.Sleep(sleepTime)
+		previousSleepTime = sleepTime
 	}
 }
