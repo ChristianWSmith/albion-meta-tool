@@ -220,6 +220,8 @@ func getAllEvents() ([]Event, error) {
 	return events, err
 }
 
+var sleepTime time.Duration
+
 func eventMonitor() {
 	var events []Event
 	var err error
@@ -251,7 +253,7 @@ func eventMonitor() {
 			}
 		}
 		duration := maxTime.Sub(minTime)
-		sleepTime := duration / 2
+		sleepTime = duration / 2
 		minSleepTime := time.Duration(30.0 * time.Second)
 		maxSleepTime := previousSleepTime * 2.0
 		if sleepTime < minSleepTime {

@@ -27,6 +27,19 @@ type Build struct {
 	Bag      Item
 }
 
+type BuildNamesOnly struct {
+	MainHand string
+	OffHand  string
+	Head     string
+	Chest    string
+	Foot     string
+	Cape     string
+	Potion   string
+	Food     string
+	Mount    string
+	Bag      string
+}
+
 type BuildFilter struct {
 	MainHand bool
 	OffHand  bool
@@ -38,6 +51,95 @@ type BuildFilter struct {
 	Food     bool
 	Mount    bool
 	Bag      bool
+}
+
+func buildToNamesOnly(build Build, buildFilter BuildFilter) BuildNamesOnly {
+	var buildNamesOnly BuildNamesOnly
+	if buildFilter.MainHand {
+		buildNamesOnly.MainHand = build.MainHand.Name
+	}
+	if buildFilter.OffHand {
+		buildNamesOnly.OffHand = build.OffHand.Name
+	}
+	if buildFilter.Head {
+		buildNamesOnly.Head = build.Head.Name
+	}
+	if buildFilter.Chest {
+		buildNamesOnly.Chest = build.Chest.Name
+	}
+	if buildFilter.Foot {
+		buildNamesOnly.Foot = build.Foot.Name
+	}
+	if buildFilter.Cape {
+		buildNamesOnly.Cape = build.Cape.Name
+	}
+	if buildFilter.Food {
+		buildNamesOnly.Food = build.Food.Name
+	}
+	if buildFilter.Potion {
+		buildNamesOnly.Potion = build.Potion.Name
+	}
+	if buildFilter.Mount {
+		buildNamesOnly.Mount = build.Mount.Name
+	}
+	if buildFilter.Bag {
+		buildNamesOnly.Bag = build.Bag.Name
+	}
+	return buildNamesOnly
+}
+
+func buildsToNamesOnly(builds []Build, buildFilter BuildFilter) []BuildNamesOnly {
+	var buildsNamesOnly []BuildNamesOnly
+
+	for _, build := range builds {
+		buildsNamesOnly = append(buildsNamesOnly, buildToNamesOnly(build, buildFilter))
+	}
+	return buildsNamesOnly
+}
+
+func namesOnlyToItems(buildsNamesOnly []BuildNamesOnly, buildFilter BuildFilter) []Item {
+	uniqueItemNames := make(map[string]bool)
+	var items []Item
+
+	for _, buildNameOnly := range buildsNamesOnly {
+		if buildFilter.MainHand && buildNameOnly.MainHand != "" {
+			uniqueItemNames[buildNameOnly.MainHand] = true
+		}
+		if buildFilter.OffHand && buildNameOnly.OffHand != "" {
+			uniqueItemNames[buildNameOnly.OffHand] = true
+		}
+		if buildFilter.Head && buildNameOnly.Head != "" {
+			uniqueItemNames[buildNameOnly.Head] = true
+		}
+		if buildFilter.Chest && buildNameOnly.Chest != "" {
+			uniqueItemNames[buildNameOnly.Chest] = true
+		}
+		if buildFilter.Foot && buildNameOnly.Foot != "" {
+			uniqueItemNames[buildNameOnly.Foot] = true
+		}
+		if buildFilter.Cape && buildNameOnly.Cape != "" {
+			uniqueItemNames[buildNameOnly.Cape] = true
+		}
+		if buildFilter.Food && buildNameOnly.Food != "" {
+			uniqueItemNames[buildNameOnly.Food] = true
+		}
+		if buildFilter.Potion && buildNameOnly.Potion != "" {
+			uniqueItemNames[buildNameOnly.Potion] = true
+		}
+		if buildFilter.Mount && buildNameOnly.Mount != "" {
+			uniqueItemNames[buildNameOnly.Mount] = true
+		}
+		if buildFilter.Bag && buildNameOnly.Bag != "" {
+			uniqueItemNames[buildNameOnly.Bag] = true
+		}
+	}
+
+	for itemName, present := range uniqueItemNames {
+		if present {
+			items = append(items, Item{Name: itemName})
+		}
+	}
+	return items
 }
 
 var humanReadableNames map[string]string
