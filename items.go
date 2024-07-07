@@ -50,7 +50,7 @@ func validHumanReadableItem(name string) bool {
 			strings.Contains(name, "_HEAD_") ||
 			strings.Contains(name, "_ARMOR_") ||
 			strings.Contains(name, "_SHOES_") ||
-			strings.Contains(name, "_CAPEITEM_") ||
+			strings.Contains(name, "_CAPE") ||
 			strings.Contains(name, "_POTION_") ||
 			strings.Contains(name, "_MEAL_") ||
 			strings.Contains(name, "_MOUNT_") ||
