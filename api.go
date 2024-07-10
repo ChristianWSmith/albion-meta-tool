@@ -14,6 +14,7 @@ type ItemStats struct {
 	SilverLost   float64
 	Kills        int64
 	Deaths       int64
+	SumAverageIp float64
 }
 
 type BuildStats struct {
@@ -84,6 +85,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.MainHand.Name != "" {
@@ -92,6 +94,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -102,6 +105,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.OffHand.Name != "" {
@@ -110,6 +114,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -120,6 +125,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Head.Name != "" {
@@ -128,6 +134,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -138,6 +145,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Chest.Name != "" {
@@ -146,6 +154,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -156,6 +165,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Foot.Name != "" {
@@ -164,6 +174,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -174,6 +185,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Cape.Name != "" {
@@ -182,6 +194,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -192,6 +205,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Potion.Name != "" {
@@ -200,6 +214,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -210,6 +225,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Food.Name != "" {
@@ -218,6 +234,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -228,6 +245,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Mount.Name != "" {
@@ -236,6 +254,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 		}
@@ -246,6 +265,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
 			if event.VictimBuild.Bag.Name != "" {
@@ -254,6 +274,7 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
 
@@ -278,6 +299,7 @@ func generateItemReport() ([][]string, error) {
 		"enchantment",
 		"equivalence",
 		"usages",
+		"average_build_ip",
 		"k/d",
 		"silver_ratio",
 		"kills",
@@ -322,6 +344,7 @@ func generateItemReport() ([][]string, error) {
 			fmt.Sprintf("%d", item.Enchantment),
 			fmt.Sprintf("%d", item.Tier+item.Enchantment),
 			fmt.Sprintf("%d", stats.Kills+stats.Deaths),
+			fmt.Sprintf("%f", stats.SumAverageIp/float64(stats.Kills+stats.Deaths)),
 			fmt.Sprintf("%f", float64(stats.Kills)/math.Max(float64(stats.Deaths), 1.0)),
 			fmt.Sprintf("%f", stats.SilverGained*0.7/math.Max(math.Max(stats.SilverLost, 1.0), medianPrice)),
 			fmt.Sprintf("%d", stats.Kills),
