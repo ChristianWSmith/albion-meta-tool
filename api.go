@@ -82,6 +82,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.MainHand.Name != "" {
 				item := event.KillerBuild.MainHand
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -91,6 +93,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.MainHand.Name != "" {
 				item := event.VictimBuild.MainHand
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -102,6 +106,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.OffHand.Name != "" {
 				item := event.KillerBuild.OffHand
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -111,6 +117,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.OffHand.Name != "" {
 				item := event.VictimBuild.OffHand
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -122,6 +130,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Head.Name != "" {
 				item := event.KillerBuild.Head
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -131,6 +141,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Head.Name != "" {
 				item := event.VictimBuild.Head
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -142,6 +154,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Chest.Name != "" {
 				item := event.KillerBuild.Chest
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -151,6 +165,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Chest.Name != "" {
 				item := event.VictimBuild.Chest
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -162,6 +178,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Foot.Name != "" {
 				item := event.KillerBuild.Foot
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -171,6 +189,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Foot.Name != "" {
 				item := event.VictimBuild.Foot
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -182,6 +202,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Cape.Name != "" {
 				item := event.KillerBuild.Cape
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -191,6 +213,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Cape.Name != "" {
 				item := event.VictimBuild.Cape
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -202,6 +226,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Potion.Name != "" {
 				item := event.KillerBuild.Potion
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -211,6 +237,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Potion.Name != "" {
 				item := event.VictimBuild.Potion
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -222,6 +250,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Food.Name != "" {
 				item := event.KillerBuild.Food
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -231,6 +261,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Food.Name != "" {
 				item := event.VictimBuild.Food
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -242,6 +274,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Mount.Name != "" {
 				item := event.KillerBuild.Mount
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -251,6 +285,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Mount.Name != "" {
 				item := event.VictimBuild.Mount
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -262,6 +298,8 @@ func generateItemReport() ([][]string, error) {
 			if event.KillerBuild.Bag.Name != "" {
 				item := event.KillerBuild.Bag
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
@@ -271,6 +309,8 @@ func generateItemReport() ([][]string, error) {
 			if event.VictimBuild.Bag.Name != "" {
 				item := event.VictimBuild.Bag
 				item.Quality = 0
+				item.Tier = item.Tier + item.Enchantment
+				item.Enchantment = 0
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
@@ -295,8 +335,6 @@ func generateItemReport() ([][]string, error) {
 	// format to csv
 	response = append(response, []string{
 		"item_id",
-		"tier",
-		"enchantment",
 		"equivalence",
 		"usages",
 		"average_build_ip",
@@ -341,8 +379,6 @@ func generateItemReport() ([][]string, error) {
 		response = append(response, []string{
 			humanReadableNamesBatch[item.Name],
 			fmt.Sprintf("%d", item.Tier),
-			fmt.Sprintf("%d", item.Enchantment),
-			fmt.Sprintf("%d", item.Tier+item.Enchantment),
 			fmt.Sprintf("%d", stats.Kills+stats.Deaths),
 			fmt.Sprintf("%f", stats.SumAverageIp/float64(stats.Kills+stats.Deaths)),
 			fmt.Sprintf("%f", float64(stats.Kills)/math.Max(float64(stats.Deaths), 1.0)),
