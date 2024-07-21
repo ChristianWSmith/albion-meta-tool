@@ -14,6 +14,7 @@ type ItemStats struct {
 	SilverLost   float64
 	Kills        int64
 	Deaths       int64
+	Slot         string
 	SumAverageIp float64
 }
 
@@ -87,6 +88,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Weapon"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -98,6 +102,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Weapon"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -111,6 +118,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Off Hand"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -122,6 +132,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Off Hand"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -135,6 +148,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Head"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -146,6 +162,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Head"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -159,6 +178,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Chest"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -170,6 +192,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Chest"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -183,6 +208,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Foot"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -194,6 +222,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Foot"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -207,6 +238,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Cape"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -218,6 +252,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Cape"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -231,6 +268,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Potion"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -242,6 +282,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Potion"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -255,6 +298,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Food"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -266,6 +312,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Food"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -279,6 +328,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Mount"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -290,6 +342,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Mount"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -303,6 +358,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverGained += buildPrices[event.VictimBuild]
 				stats.Kills += 1
+				if stats.Slot == "" {
+					stats.Slot = "Bag"
+				}
 				stats.SumAverageIp += event.KillerAverageIp
 				itemsToStats[item] = stats
 			}
@@ -314,6 +372,9 @@ func generateItemReport() ([][]string, error) {
 				stats := itemsToStats[item]
 				stats.SilverLost += buildPrices[event.VictimBuild]
 				stats.Deaths += 1
+				if stats.Slot == "" {
+					stats.Slot = "Bag"
+				}
 				stats.SumAverageIp += event.VictimAverageIp
 				itemsToStats[item] = stats
 			}
@@ -335,6 +396,7 @@ func generateItemReport() ([][]string, error) {
 	// format to csv
 	response = append(response, []string{
 		"item_id",
+		"slot",
 		"equivalence",
 		"usages",
 		"average_build_ip",
@@ -346,38 +408,26 @@ func generateItemReport() ([][]string, error) {
 		"silver_lost",
 	})
 	for item, stats := range itemsToStats {
-		normalItem := item
-		goodItem := item
-		outstandingItem := item
-		excellentItem := item
-		masterpieceItem := item
-		normalItem.Quality = 0
-		goodItem.Quality = 1
-		outstandingItem.Quality = 2
-		excellentItem.Quality = 3
-		masterpieceItem.Quality = 4
-		var qualityPrices []float64
-		if itemPrices[normalItem] != 0.0 {
-			qualityPrices = append(qualityPrices, itemPrices[normalItem])
+
+		var itemVersionPrices []float64
+		for enchantment := 0; enchantment <= 4; enchantment++ {
+			for quality := 0; quality <= 4; quality++ {
+				tempItem := item
+				tempItem.Tier = tempItem.Tier - uint8(enchantment)
+				tempItem.Enchantment = uint8(enchantment)
+				tempItem.Quality = uint8(quality)
+				if itemPrices[tempItem] != 0.0 {
+					itemVersionPrices = append(itemVersionPrices, itemPrices[tempItem])
+				}
+			}
 		}
-		if itemPrices[goodItem] != 0.0 {
-			qualityPrices = append(qualityPrices, itemPrices[goodItem])
-		}
-		if itemPrices[outstandingItem] != 0.0 {
-			qualityPrices = append(qualityPrices, itemPrices[outstandingItem])
-		}
-		if itemPrices[excellentItem] != 0.0 {
-			qualityPrices = append(qualityPrices, itemPrices[excellentItem])
-		}
-		if itemPrices[masterpieceItem] != 0.0 {
-			qualityPrices = append(qualityPrices, itemPrices[masterpieceItem])
-		}
-		medianPrice := calculateMedian(qualityPrices)
+		medianPrice := calculateMedian(itemVersionPrices)
 		if medianPrice == 0.0 {
 			medianPrice = math.Inf(1)
 		}
 		response = append(response, []string{
 			humanReadableNamesBatch[item.Name],
+			stats.Slot,
 			fmt.Sprintf("%d", item.Tier),
 			fmt.Sprintf("%d", stats.Kills+stats.Deaths),
 			fmt.Sprintf("%f", stats.SumAverageIp/float64(stats.Kills+stats.Deaths)),
@@ -400,7 +450,7 @@ func itemReportHandler(w http.ResponseWriter, _ *http.Request) {
 
 	// Encode and send the CSV response
 	w.Header().Set("Content-Type", "text/csv")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=report-%d.csv", time.Now().Unix()))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=itemReport-%d.csv", time.Now().Unix()))
 	writer := csv.NewWriter(w)
 	for _, record := range response {
 		if err := writer.Write(record); err != nil {
@@ -558,7 +608,7 @@ func buildReportHandler(w http.ResponseWriter, _ *http.Request) {
 
 	// Encode and send the CSV response
 	w.Header().Set("Content-Type", "text/csv")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=report-%d.csv", time.Now().Unix()))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=buildReport-%d.csv", time.Now().Unix()))
 	writer := csv.NewWriter(w)
 	for _, record := range response {
 		if err := writer.Write(record); err != nil {
